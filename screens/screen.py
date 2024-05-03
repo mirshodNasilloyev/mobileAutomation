@@ -1,3 +1,5 @@
+import time
+
 from appium.common.exceptions import NoSuchContextException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -62,3 +64,33 @@ class Screen:
             return WebDriverWait(self.driver, 30).until(ec.visibility_of_all_elements_located((AppiumBy.CLASS_NAME, value)))
         elif method == "name":
             return WebDriverWait(self.driver, 30).until(ec.visibility_of_all_elements_located((AppiumBy.NAME, value)))
+
+    def is_element_exist(self, locator):
+        try:
+            return self.get_element(locator).is_displayed()
+        except NoSuchContextException as e:
+            print("Error during getting locator:", e.msg, "and element: ", locator[1])
+        return False
+
+    def click(self, locator):
+        self.get_element(locator).click()
+
+    def clear_text_of_input_field(self, locator):
+        self.get_element(locator).clear()
+
+    def get_element_text(self, locator):
+       return self.get_element(locator).text
+
+    def enter_data(self, locator):
+        self.get_element(locator).send_keys()
+
+    def click_by_keyCode(self, key_code):
+        self.driver.press_keycode(key_code)
+
+    def hide_keyboard(self):
+        try:
+            time.sleep(1)
+            self.driver.hide_keyboard()
+        except Exception:
+
+
