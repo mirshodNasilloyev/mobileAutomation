@@ -1,9 +1,12 @@
 import time
 
 from appium.common.exceptions import NoSuchContextException
+from selenium.webdriver.common.actions import interaction
+from selenium.webdriver.common.actions.pointer_input import PointerInput
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from appium.webdriver.common.appiumby import AppiumBy
+from selenium.webdriver.common.action_chains import ActionChains, ActionBuilder
 
 
 class Screen:
@@ -92,5 +95,23 @@ class Screen:
             time.sleep(1)
             self.driver.hide_keyboard()
         except Exception:
+            pass
+
+    def scroll_to_element(self, locator):
+        element = self.get_element(locator)
+        actions = ActionChains(self.driver)
+        actions.move_to_element(element).perform()
+
+    def scroll_down_menu_settings(self, x, y, distance = 400):
+        action = ActionChains(self.driver)
+        window_size = self.driver.get_window_size()
+        x, y = window_size["width"] / 6, window_size["height"] / 2
+        action.w3c_actions = ActionBuilder(self.driver, mouse=PointerInput(interaction.POINTER_TOUCH, 'touch'))
+        action.w3c_actions.pointer_action.move_to_location(x, y)
+        action.w3c_actions.pointer_action.click_and_hold()
+        action.w3c_actions.pointer_action.move_to_location(x, y - distance)
+        action.w3c_actions.pointer_action.release()
+        action.w3c_actions.perform()
+
 
 
